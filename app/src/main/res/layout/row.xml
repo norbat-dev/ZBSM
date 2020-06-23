@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="2dp"
+    app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="end|bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/descTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Opis notatki (moze nie bedzie)"/>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                />
+        </LinearLayout>
+</androidx.cardview.widget.CardView>
