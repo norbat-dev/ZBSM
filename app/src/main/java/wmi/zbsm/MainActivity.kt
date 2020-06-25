@@ -6,6 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.content.Context
+import android.content.Intent
+import android.view.Menu
+import android.widget.Toast
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.row.view.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,8 +22,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         LoadQuery("%")
+
+        val mFab = findViewById<FloatingActionButton>(R.id.fab)
+        mFab.setOnClickListener {
+            startActivity(Intent(this, AddNoteActivity::class.java))
+        }
     }
 
+    override fun onResume(){
+        super.onResume()
+        LoadQuery("%")
+    }
     private fun LoadQuery(title:String){
         var dbManager = DbManager(this)
         val projections = arrayOf("ID", "Title", "Description")
@@ -39,8 +53,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         //adapter
-        var myNotesAdapter = MyNotesAdapter(this, listNotes) 
+        var myNotesAdapter = MyNotesAdapter(this, listNotes)
+        //
+        notesLV.adapter = myNotesAdapter
+
     }
+
+
 
     inner class MyNotesAdapter : BaseAdapter {
         var listNotesAdapter = ArrayList<Note>()
@@ -57,23 +76,41 @@ class MainActivity : AppCompatActivity() {
             val myNote = listNotesAdapter[p0]
             myView.titleTv.text = myNote.nodeName
             myView.descTv.text = myNote.nodeDes
-            //delete button click -- not implement
+            //delete button click
+            myView.deleteBtn.setOnClickListener{
+                var dbManager = DbManager(this.context!!)
+                val selectionArgs = arrayOf(myNote.nodeID.toString())
+                dbManager.delete("ID=?", selectionArgs)
+                LoadQuery("%")
+            }
+            //edit
+            myView.editBtn.setOnClickListener {
+                UpdateFun(myNote)
+            }
             return myView
         }
 
         override fun getItem(p0: Int): Any {
-            TODO("Not yet implemented")
+            return listNotesAdapter[p0]
         }
 
         override fun getItemId(p0: Int): Long {
-            TODO("Not yet implemented")
+            return p0.toLong()
         }
 
         override fun getCount(): Int {
-            TODO("Not yet implemented")
+            return listNotesAdapter.size
         }
 
 
+    }
+
+    private fun UpdateFun(myNote: Note) {
+        var intent = Intent(this, AddNoteActivity::class.java)
+        intent.putExtra("ID", myNote.nodeID)
+        intent.putExtra("name", myNote.nodeName)
+        intent.putExtra("des", myNote.nodeDes)
+        startActivity(intent)
     }
 }
 

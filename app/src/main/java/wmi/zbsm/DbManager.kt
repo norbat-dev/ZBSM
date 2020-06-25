@@ -19,7 +19,7 @@ class DbManager {
 
     var dbVersion = 1
 
-    val sqlCreateTable = "CREATE TABLE IF NOT EXIST"+dbTable+"("+colID+" INTEGER PRIMARY KEY, "+colTitle+" TEXT, "+colDes+" TEXT);"
+    val sqlCreateTable = "CREATE TABLE IF NOT EXISTS "+dbTable+"("+colID+" INTEGER PRIMARY KEY, "+colTitle+" TEXT, "+colDes+" TEXT);"
 
     var sqlDB:SQLiteDatabase?=null
 
@@ -35,11 +35,12 @@ class DbManager {
         }
 
         override fun onCreate(p0: SQLiteDatabase?) {
-            db!!.execSQL(sqlCreateTable)
+
+            p0!!.execSQL(sqlCreateTable)
             Toast.makeText(this.context, "Baza danych stworzona", Toast.LENGTH_SHORT).show()
         }
         override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-            db!!.execSQL("Drop table id Exists "+dbTable)
+            p0!!.execSQL("Drop table id Exists "+dbTable)
         }
 
 

@@ -36,5 +36,26 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="3dp"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+                <ImageButton
+                    android:contentDescription="Edytuj notatke"
+                    android:id="@+id/deleteBtn"
+                    android:src="@drawable/ic_action_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null" />
+                <ImageButton
+                    android:contentDescription="Usuń notatke"
+                    android:id="@+id/editBtn"
+                    android:src="@drawable/ic_action_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null" />
+            </LinearLayout>
+
         </LinearLayout>
 </androidx.cardview.widget.CardView>
