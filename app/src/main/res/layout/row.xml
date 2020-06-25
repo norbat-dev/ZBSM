@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="3dp"
-    app:cardCornerRadius="2dp"
+    app:cardElevation="5dp"
+    app:cardCornerRadius="5dp"
     app:cardUseCompatPadding="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:gravity="end|bottom"
             android:orientation="vertical">
 
@@ -19,13 +19,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Title"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
-
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="10dp"/>
             <TextView
                 android:id="@+id/descTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="Opis notatki (moze nie bedzie)"/>
 
             <View
@@ -36,6 +40,10 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="3dp"
                 />
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="10dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
