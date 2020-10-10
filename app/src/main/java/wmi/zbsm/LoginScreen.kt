@@ -1,6 +1,7 @@
 package wmi.zbsm
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.facebook.stetho.Stetho
 import java.util.concurrent.Executor
+
 
 class LoginScreen : AppCompatActivity() {
 
@@ -19,6 +21,7 @@ class LoginScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        
         Stetho.initializeWithDefaults(this);
 
 

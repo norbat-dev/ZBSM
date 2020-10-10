@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ZBSM</string>
+    <string name="save">Save Password</string>
+    <string name="enter_pass">Enter password</string>
+    <string name="first_run">This is your first run of Application. You need to setup your own password to encrypt database.</string>
 </resources>

@@ -12,21 +12,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".AddNoteActivity"
+        <activity
+            android:name=".AddNoteActivity"
             android:label="Dodaj notatkę"
-            android:parentActivityName=".MainActivity">
-
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".LoginScreen"
+            android:label="Notatnik ZBSM">
         </activity>
-        <activity android:name=".LoginScreen"
-            android:label="Autentykacja">
+        <activity
+            android:name=".PasswordSetting"
+            android:label="Notatnik ZBSM">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:label="ZBSM Notatki">
-
-        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="ZBSM Notatki"></activity>
     </application>
 
 </manifest>
