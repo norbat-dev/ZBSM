@@ -11,15 +11,17 @@ import java.nio.ByteOrder
 import android.content.ContentValues
 
 class DbManager {
-    var dbName = "ZBSMNotes"
-    var dbTable = "Notes"
-    var colID = "ID"
-    var colTitle = "Title"
-    var colDes = "Description"
+    val dbName = "ZBSMNotes"
+    val dbTable = "Notes"
+    val colID = "ID"
+    val colTitle = "Title"
+    val colDes = "Description"
+    val saltCol = "salt"
+    val ivCol = "iv"
 
-    var dbVersion = 1
+    val dbVersion = 2
 
-    val sqlCreateTable = "CREATE TABLE IF NOT EXISTS "+dbTable+"("+colID+" INTEGER PRIMARY KEY, "+colTitle+" TEXT, "+colDes+" TEXT);"
+    val sqlCreateTable = "CREATE TABLE IF NOT EXISTS "+dbTable+"("+colID+" INTEGER PRIMARY KEY, "+colTitle+" TEXT, "+colDes+" TEXT, "+saltCol+" TEXT, "+ivCol+" TEXT);"
 
     var sqlDB:SQLiteDatabase?=null
 
@@ -40,7 +42,7 @@ class DbManager {
             Toast.makeText(this.context, "Baza danych stworzona", Toast.LENGTH_SHORT).show()
         }
         override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-            p0!!.execSQL("Drop table id Exists "+dbTable)
+            p0!!.execSQL("Drop table if Exists "+dbTable)
         }
 
 

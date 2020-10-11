@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.row.view.*
 
 class MainActivity : AppCompatActivity() {
 
-    var listNotes = ArrayList<Note>()
+    val listNotes = ArrayList<Note>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +34,15 @@ class MainActivity : AppCompatActivity() {
         LoadQuery("%")
     }
     private fun LoadQuery(title:String){
-        var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "Title", "Description")
+        val dbManager = DbManager(this)
+        val projections = arrayOf("ID", "Title", "Description", "salt", "iv")
         val selectionArgs = arrayOf(title)
         val cursor = dbManager.Query(projections, "Title like ?", selectionArgs, "Title")
         listNotes.clear()
         if(cursor.moveToFirst()){
 
             do{
+                
                 val ID = cursor.getInt(cursor.getColumnIndex("ID"))
                 val Title = cursor.getString(cursor.getColumnIndex("Title"))
                 val Description = cursor.getString(cursor.getColumnIndex("Description"))
