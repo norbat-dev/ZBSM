@@ -9,6 +9,7 @@ import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
 
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_add_note.*
@@ -41,6 +42,9 @@ class AddNoteActivity : AppCompatActivity() {
             if(id!=0){
                 titleEdit.setText(bundle.getString("name"))
                 descEdit.setText(bundle.getString("des"))
+                val value = bundle.getString("buttontxt")
+                val button = findViewById<Button>(R.id.addNoteBtn)
+                button.setText(value)
             }
         }catch (ex:Exception){
 

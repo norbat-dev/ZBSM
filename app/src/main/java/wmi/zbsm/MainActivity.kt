@@ -1,21 +1,34 @@
 package wmi.zbsm
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
+import android.util.Base64.*
+import android.util.Base64.NO_WRAP
+import android.util.Base64.decode
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.content.Context
-import android.content.Intent
-import android.view.Menu
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.row.view.*
+import java.nio.charset.Charset
+import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     val listNotes = ArrayList<Note>()
+    private val PRIVATEMODE = Context.MODE_PRIVATE
+    private val passSharedKey = "PasswordSetting"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +55,37 @@ class MainActivity : AppCompatActivity() {
         if(cursor.moveToFirst()){
 
             do{
-                
-                val ID = cursor.getInt(cursor.getColumnIndex("ID"))
-                val Title = cursor.getString(cursor.getColumnIndex("Title"))
-                val Description = cursor.getString(cursor.getColumnIndex("Description"))
+//                val salt = cursor.getString(cursor.getColumnIndex("salt")).toByteArray()
+//                val ivDB = cursor.getString(cursor.getColumnIndex("iv")).toByteArray()
 
-                listNotes.add(Note(ID, Title, Description))
+                val salt = Base64.decode(cursor.getString(cursor.getColumnIndex("salt")), Base64.NO_WRAP)
+                val iv = Base64.decode(cursor.getString(cursor.getColumnIndex("iv")), Base64.NO_WRAP)
+
+
+                val ID = cursor.getInt(cursor.getColumnIndex("ID"))
+                val titleEncrypted = Base64.decode(cursor.getString(cursor.getColumnIndex("Title")), Base64.NO_WRAP)
+                val descriptionEncrypted = Base64.decode(cursor.getString(cursor.getColumnIndex("Description")), Base64.NO_WRAP)
+
+                val sharedPassPref = getSharedPreferences(passSharedKey, PRIVATEMODE)
+                val passwordString = sharedPassPref.getString(passSharedKey,"null")
+
+                val passwordChar: CharArray = passwordString.toCharArray()
+                val pbKeySpec = PBEKeySpec(passwordChar, salt, 1324, 256)
+                val secretKeyFactory: SecretKeyFactory =
+                    SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+                val keyBytes: ByteArray =
+                    secretKeyFactory.generateSecret(pbKeySpec).getEncoded()
+                val keySpec = SecretKeySpec(keyBytes, "AES")
+//
+                val cipher: Cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+                val ivSpec = IvParameterSpec(iv)
+                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
+                val titleDecrypted = cipher.doFinal(titleEncrypted)
+                val descriptionDecrypted = cipher.doFinal(descriptionEncrypted)
+
+
+
+                listNotes.add(Note(ID, titleDecrypted.toString(Charset.defaultCharset()), descriptionDecrypted.toString(Charset.defaultCharset())))
             }while(cursor.moveToNext())
 
 
@@ -107,10 +145,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun UpdateFun(myNote: Note) {
-        var intent = Intent(this, AddNoteActivity::class.java)
+        val intent = Intent(this, AddNoteActivity::class.java)
         intent.putExtra("ID", myNote.nodeID)
         intent.putExtra("name", myNote.nodeName)
         intent.putExtra("des", myNote.nodeDes)
+        intent.putExtra("buttontxt","Zapisz")
         startActivity(intent)
     }
 }
