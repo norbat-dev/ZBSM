@@ -3,4 +3,6 @@
     <string name="save">Save Password</string>
     <string name="enter_pass">Enter password</string>
     <string name="first_run">This is your first run of Application. You need to setup your own password to encrypt database.</string>
+    <string name="login_desc">Enter your password to decrypt notes</string>
+    <string name="login">Login</string>
 </resources>

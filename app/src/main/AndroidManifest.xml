@@ -11,15 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".Login"></activity>
         <activity
             android:name=".AddNoteActivity"
             android:label="Dodaj notatkę"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".LoginScreen"
-            android:label="Notatnik ZBSM">
-        </activity>
+            android:label="Notatnik ZBSM"></activity>
         <activity
             android:name=".PasswordSetting"
             android:label="Notatnik ZBSM">
@@ -31,7 +30,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="ZBSM Notatki"></activity>
+            android:label="ZBSM Notatki" />
     </application>
 
 </manifest>
