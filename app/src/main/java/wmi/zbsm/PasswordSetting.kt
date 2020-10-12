@@ -7,16 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import java.security.SecureRandom
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
-import javax.crypto.spec.SecretKeySpec
-import javax.crypto.spec.IvParameterSpec
-import kotlinx.android.synthetic.main.activity_password_setting.*
-
-
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 
 class PasswordSetting : AppCompatActivity() {
@@ -74,14 +67,16 @@ class PasswordSetting : AppCompatActivity() {
                             editTextPassword?.setError("Enter minimum 8 characters!")
                         } else {
 
+                            val passwordHash = md5(passwordString);
+
                             Log.d("APP-shared",sharedPassPref.getString(passSharedKey,"no ni ma"))
                             val sharedPassEdit: SharedPreferences =
                                 this@PasswordSetting.getPreferences(PRIVATEMODE)
                             val editor = sharedPassEdit.edit()
                             editor.clear()
-                            editor.putString(passSharedKey, passwordString)
+                            editor.putString(passSharedKey, passwordHash)
                             val zapisano = editor.commit()
-                            Log.d("APP-shared",passwordString)
+                            Log.d("APP-shared",passwordHash)
                             Log.d("APP-shared",zapisano.toString())
                             Log.d("APP-shared",sharedPassPref.getString(passSharedKey,"no ni ma"))
                             Log.d("APP-shared",sharedPassPref.contains(passSharedKey).toString())
@@ -89,11 +84,33 @@ class PasswordSetting : AppCompatActivity() {
 
                             val intent = Intent(this, MainActivity::class.java)
                             // start your next activity
+                            intent.putExtra("pass", passwordString);
+
                             startActivity(intent)
                         }
                     }
                 }
             }
         }
+    }
+    fun md5(s: String): String? {
+        try {
+            // Create MD5 Hash
+            val digest = MessageDigest.getInstance("MD5")
+            digest.update(s.toByteArray())
+            val messageDigest = digest.digest()
+
+            // Create Hex String
+            val hexString = StringBuffer()
+            for (i in messageDigest.indices) hexString.append(
+                Integer.toHexString(
+                    0xFF and messageDigest[i].toInt()
+                )
+            )
+            return hexString.toString()
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
+        return ""
     }
 }

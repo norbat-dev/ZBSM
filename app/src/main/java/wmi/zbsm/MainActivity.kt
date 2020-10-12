@@ -4,49 +4,54 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
-import android.util.Base64.*
-import android.util.Base64.NO_WRAP
-import android.util.Base64.decode
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.stetho.Stetho
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.row.view.*
 import java.nio.charset.Charset
-import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     val listNotes = ArrayList<Note>()
     private val PRIVATEMODE = Context.MODE_PRIVATE
     private val passSharedKey = "PasswordSetting"
+    var passwordString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LoadQuery("%")
+        passwordString = getIntent().getStringExtra("pass")
+
+
+        Stetho.initializeWithDefaults(this)
+
+        LoadQuery("%", passwordString)
 
         val mFab = findViewById<FloatingActionButton>(R.id.fab)
         mFab.setOnClickListener {
-            startActivity(Intent(this, AddNoteActivity::class.java))
+//            startActivity(Intent(this, AddNoteActivity::class.java))
+            val intent = Intent(this, AddNoteActivity::class.java)
+            intent.putExtra("pass", passwordString);
+            startActivity(intent)
         }
     }
 
     override fun onResume(){
         super.onResume()
-        LoadQuery("%")
+        LoadQuery("%",passwordString)
     }
-    private fun LoadQuery(title:String){
+    private fun LoadQuery(title:String, passwordString:String){
         val dbManager = DbManager(this)
         val projections = arrayOf("ID", "Title", "Description", "salt", "iv")
         val selectionArgs = arrayOf(title)
@@ -67,9 +72,12 @@ class MainActivity : AppCompatActivity() {
                 val descriptionEncrypted = Base64.decode(cursor.getString(cursor.getColumnIndex("Description")), Base64.NO_WRAP)
 
                 val sharedPassPref = getSharedPreferences(passSharedKey, PRIVATEMODE)
-                val passwordString = sharedPassPref.getString(passSharedKey,"null")
+//                val passwordString = sharedPassPref.getString(passSharedKey,"null")
 
+
+                Log.d("APP-passwordString",passwordString)
                 val passwordChar: CharArray = passwordString.toCharArray()
+
                 val pbKeySpec = PBEKeySpec(passwordChar, salt, 1324, 256)
                 val secretKeyFactory: SecretKeyFactory =
                     SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
@@ -120,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 var dbManager = DbManager(this.context!!)
                 val selectionArgs = arrayOf(myNote.nodeID.toString())
                 dbManager.delete("ID=?", selectionArgs)
-                LoadQuery("%")
+                LoadQuery("%",passwordString)
             }
             //edit
             myView.editBtn.setOnClickListener {
@@ -146,10 +154,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun UpdateFun(myNote: Note) {
         val intent = Intent(this, AddNoteActivity::class.java)
+
         intent.putExtra("ID", myNote.nodeID)
         intent.putExtra("name", myNote.nodeName)
         intent.putExtra("des", myNote.nodeDes)
         intent.putExtra("buttontxt","Zapisz")
+        intent.putExtra("pass", passwordString);
         startActivity(intent)
     }
 }

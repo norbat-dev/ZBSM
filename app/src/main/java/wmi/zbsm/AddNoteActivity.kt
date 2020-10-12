@@ -7,6 +7,7 @@ import android.util.Base64
 import android.util.Base64.*
 import android.util.Base64.NO_WRAP
 import android.util.Base64.encodeToString
+import android.util.Log
 
 import android.view.View
 import android.widget.Button
@@ -28,6 +29,7 @@ class AddNoteActivity : AppCompatActivity() {
 
     val dbTable = "Notes"
     var id = 0
+    var passwordString = ""
     private val PRIVATEMODE = Context.MODE_PRIVATE
     private val passSharedKey = "PasswordSetting"
 
@@ -39,6 +41,7 @@ class AddNoteActivity : AppCompatActivity() {
 
             val bundle:Bundle = intent.extras
             id = bundle.getInt("ID",0)
+            passwordString = bundle.getString("pass","")
             if(id!=0){
                 titleEdit.setText(bundle.getString("name"))
                 descEdit.setText(bundle.getString("des"))
@@ -61,10 +64,10 @@ class AddNoteActivity : AppCompatActivity() {
 
 
         val sharedPassPref = getSharedPreferences(passSharedKey, PRIVATEMODE)
-        val passwordString = sharedPassPref.getString(passSharedKey,"null")
+//        val passwordString = sharedPassPref.getString(passSharedKey,"null")
 
-        val passwordChar: CharArray =
-            passwordString.toCharArray() //Turn password into char[] array
+        Log.d("APP = passwordString - AddNoteActivity" ,passwordString)
+        val passwordChar: CharArray = passwordString.toCharArray() //Turn password into char[] array
         val pbKeySpec =
             PBEKeySpec(passwordChar, salt, 1324, 256) //1324 iterations
         val secretKeyFactory: SecretKeyFactory =
